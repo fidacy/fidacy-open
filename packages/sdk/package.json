@@ -26,6 +26,9 @@
   "dependencies": {
     "@fidacy/verify": "workspace:*"
   },
+  "devDependencies": {
+    "jose": "^5.9.6"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fidacy/fidacy-open.git",

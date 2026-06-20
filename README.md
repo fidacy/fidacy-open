@@ -57,9 +57,7 @@ Runnable end-to-end example: [`examples/quickstart-node`](./examples/quickstart-
 
 ## Repository
 
-> **Note:** the GitHub URL `https://github.com/fidacy/fidacy-open` is a **placeholder**
-> until the public repository is created. Package `repository`/`homepage`/`bugs`
-> metadata points at this placeholder for now.
+> **Home:** the canonical repository is https://github.com/fidacy/fidacy-open. Packages are published under the npm scope **@fidacy** (Apache-2.0).
 
 ## Design principles
 

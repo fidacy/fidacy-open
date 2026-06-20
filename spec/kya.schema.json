@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/kya.schema.json",
+  "title": "Fidacy KYA Agent Identity Binding",
+  "description": "The PUBLIC, transmitted Know-Your-Agent identity binding: the proof-of-possession key that ties a mandate to an agent. This models the `cnf` (confirmation) member as used in mandates (RFC 7800), carrying an Ed25519 public JWK whose RFC 7638 thumbprint is the agent's stable key reference. This schema covers ONLY the public identity assertion shape — it does NOT describe any trust graph, reputation, or scoring, which are not part of this specification.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["cnf"],
+  "properties": {
+    "cnf": {
+      "type": "object",
+      "description": "RFC 7800 confirmation member. Binds the mandate to a key the holder proves possession of.",
+      "additionalProperties": true,
+      "required": ["jwk"],
+      "properties": {
+        "jwk": { "$ref": "#/$defs/ed25519PublicJwk" }
+      }
+    },
+    "thumbprint": {
+      "type": "string",
+      "description": "Informative. The RFC 7638 SHA-256 JWK thumbprint (base64url) of the agent's Ed25519 public key, computed over the canonical members {\"crv\",\"kty\",\"x\"} in lexicographic order with no whitespace. Stable identifier for the agent's key. When present it MUST equal the thumbprint of `cnf.jwk`.",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "ed25519PublicJwk": {
+      "type": "object",
+      "title": "Ed25519 Public JWK (OKP)",
+      "description": "An Ed25519 public key in JWK form. Only the members required to identify the key are constrained.",
+      "additionalProperties": true,
+      "required": ["kty", "crv", "x"],
+      "properties": {
+        "kty": { "const": "OKP" },
+        "crv": { "const": "Ed25519" },
+        "x": {
+          "type": "string",
+          "description": "base64url-encoded 32-byte public point.",
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

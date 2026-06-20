@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/a2a-metadata.schema.json",
+  "title": "Fidacy A2A Task.metadata Block",
+  "description": "The object an A2A client copies into a Task's `metadata` field. Models `{ fidacy_assessment: <outcome> }`. The outcome is an opaque object carrying the assessment result; clients MUST copy it into `Task.metadata` and MUST NOT invent new Task fields. The recommended Task state is derived from the decision (see a2a-metadata.md).",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["fidacy_assessment"],
+  "properties": {
+    "fidacy_assessment": {
+      "type": "object",
+      "description": "The Fidacy assessment outcome, carried verbatim. Treated as opaque metadata by the A2A layer; the signed verdict (vc_jws) inside it is the authoritative, verifiable result.",
+      "additionalProperties": true
+    }
+  }
+}

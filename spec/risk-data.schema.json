@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/risk-data.schema.json",
+  "title": "Fidacy risk_data Container",
+  "description": "The container Fidacy populates inside an AP2 Payment Mandate's `risk_data` field. It carries the signed verdict so the payment rail can read (and independently verify) Fidacy's decision. Models the `{ fidacy: { ... } }` object that is the value of `risk_data`.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["fidacy"],
+  "properties": {
+    "fidacy": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["decision", "score", "vc_jws", "signing_key_id", "payload"],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "description": "Convenience copy of the signed decision. The authoritative value is the one inside the verified `vc_jws`.",
+          "enum": ["approve", "review", "deny"]
+        },
+        "score": {
+          "type": "number",
+          "description": "Convenience copy of the signed score (0..100). Authoritative value lives in the verified `vc_jws`.",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "vc_jws": {
+          "type": "string",
+          "description": "The compact EdDSA JWS (three base64url segments joined by '.'). Independently verifiable against the public JWKS. This is the source of truth.",
+          "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*$"
+        },
+        "signing_key_id": {
+          "type": "string",
+          "description": "The kid of the key that signed `vc_jws`; matches the `did:web:fidacy.com#<kid>` issuer and the JWKS entry.",
+          "minLength": 1
+        },
+        "payload": {
+          "$ref": "https://fidacy.com/spec/risk-payload.schema.json",
+          "description": "The decoded Risk Payload claims, provided for convenience. Decoders MUST treat the contents of the verified `vc_jws` as authoritative, not this field."
+        }
+      }
+    }
+  }
+}

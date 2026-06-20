@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/risk-payload.schema.json",
+  "title": "Fidacy Risk Payload",
+  "description": "The signed claims set (the verdict) carried by a Fidacy compact JWS. These are the JSON claims that are signed with EdDSA (Ed25519) and independently verifiable against the public JWKS at https://api.fidacy.com/.well-known/jwks.json. Unknown fields are permitted for forward compatibility; verifiers MUST ignore fields they do not recognize.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["issuer", "subject", "decision", "score", "model_version", "assessed_at"],
+  "properties": {
+    "issuer": {
+      "type": "string",
+      "description": "The signer's DID. A did:web identity fragment for Fidacy; the fragment is the signing key id (kid).",
+      "pattern": "^did:web:fidacy\\.com#.+"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Opaque identifier of the agent or mandate that was assessed.",
+      "minLength": 1
+    },
+    "decision": {
+      "type": "string",
+      "description": "The verdict.",
+      "enum": ["approve", "review", "deny"]
+    },
+    "score": {
+      "type": "number",
+      "description": "Risk score, 0 (lowest risk) to 100 (highest risk).",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "signals": {
+      "type": "object",
+      "description": "Free-form, advisory signals. OPAQUE: the set of keys and their meaning are not part of this specification, may change without notice, and MUST NOT be relied on for decisioning. The signed `decision` is the authoritative output.",
+      "additionalProperties": true
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Identifier of the scoring model that produced this verdict. Independent of the format version (see VERSIONING.md).",
+      "minLength": 1
+    },
+    "assessed_at": {
+      "type": "string",
+      "description": "RFC 3339 / ISO 8601 date-time at which the assessment was made.",
+      "format": "date-time"
+    }
+  }
+}

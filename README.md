@@ -20,9 +20,21 @@ and was not tampered with — entirely client-side, with no need to call back to
 
 ## Quickstart
 
+**Run it in 30 seconds** (assess + verify a real signed verdict):
+
 ```bash
-pnpm add @fidacy/sdk @fidacy/verify
-# Not yet published to npm — for now, install from this repo (workspace).
+git clone https://github.com/fidacy/fidacy-open && cd fidacy-open/quickstart
+npm install
+FIDACY_API_KEY=fky_test_…  node quickstart.mjs   # a TEST key from app.fidacy.com (mode: test)
+```
+
+Output: a signed verdict and `signature valid: true` — cryptographically verified against
+the public JWKS, client-side, with no call back to Fidacy. See [`quickstart/`](./quickstart).
+
+Or add the packages to your own project (published on npm, Apache-2.0):
+
+```bash
+npm i @fidacy/sdk @fidacy/verify
 ```
 
 ```ts

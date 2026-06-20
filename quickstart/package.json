@@ -1,0 +1,10 @@
+{
+  "name": "fidacy-quickstart",
+  "private": true,
+  "type": "module",
+  "description": "Run Fidacy in 30 seconds: assess a mandate, then verify the signed verdict yourself.",
+  "dependencies": {
+    "@fidacy/sdk": "^0.1.0",
+    "@fidacy/verify": "^0.1.0"
+  }
+}

@@ -20,11 +20,35 @@ and was not tampered with — entirely client-side, with no need to call back to
 
 ## Quickstart
 
-> Filled in a later slice. See [`examples/quickstart-node`](./examples/quickstart-node).
+```bash
+pnpm add @fidacy/sdk @fidacy/verify
+# Not yet published to npm — for now, install from this repo (workspace).
+```
 
 ```ts
-// Coming soon — verify a Fidacy verdict in a few lines.
+import { Fidacy } from '@fidacy/sdk';
+import { verifyRiskPayload } from '@fidacy/verify';
+
+const fidacy = new Fidacy({ apiKey: process.env.FIDACY_API_KEY! });
+
+// Assess a payment mandate (AP2 intent/cart).
+const result = await fidacy.assess({
+  mandate: {
+    vct: 'mandate.payment.1',
+    payee: { id: 'merchant_demo', name: 'Demo Store' },
+    payment_amount: { amount: 4299, currency: 'EUR' },
+    payment_instrument: { id: 'pi_demo', type: 'card' },
+  },
+});
+console.log('decision:', result.decision);
+
+// Don't trust us — verify the signed verdict yourself, against the public JWKS:
+const verified = await verifyRiskPayload(result.riskPayloadJws);
+console.log('signature valid:', verified.valid);
+console.log('decisions match:', verified.claims.decision === result.decision);
 ```
+
+Runnable end-to-end example: [`examples/quickstart-node`](./examples/quickstart-node).
 
 ## Links
 

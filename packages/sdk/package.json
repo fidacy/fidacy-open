@@ -1,0 +1,41 @@
+{
+  "name": "@fidacy/sdk",
+  "version": "0.0.0",
+  "description": "Thin, typed client for the public Fidacy API. Verifies every response via @fidacy/verify.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fidacy/verify": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fidacy/fidacy-open.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/fidacy/fidacy-open/tree/main/packages/sdk#readme",
+  "bugs": {
+    "url": "https://github.com/fidacy/fidacy-open/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

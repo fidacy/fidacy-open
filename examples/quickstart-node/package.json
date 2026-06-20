@@ -1,0 +1,11 @@
+{
+  "name": "quickstart-node",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Node quickstart for verifying a Fidacy verdict. Placeholder — filled in a later slice.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "echo \"quickstart-node: placeholder — filled in Slice 5\""
+  }
+}

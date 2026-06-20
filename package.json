@@ -1,0 +1,25 @@
+{
+  "name": "fidacy-open",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Open verification + SDK for Fidacy — the external, signed trust layer for agent payments.",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "echo \"no linter configured yet (optional)\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
+  }
+}

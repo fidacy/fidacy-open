@@ -1,0 +1,41 @@
+{
+  "name": "@fidacy/verify",
+  "version": "0.0.0",
+  "description": "Isomorphic signature verification for Fidacy signed payloads, against Fidacy's public JWKS.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jose": "^5.9.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fidacy/fidacy-open.git",
+    "directory": "packages/verify"
+  },
+  "homepage": "https://github.com/fidacy/fidacy-open/tree/main/packages/verify#readme",
+  "bugs": {
+    "url": "https://github.com/fidacy/fidacy-open/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

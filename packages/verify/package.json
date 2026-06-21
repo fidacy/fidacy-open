@@ -1,6 +1,6 @@
 {
   "name": "@fidacy/verify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Isomorphic signature verification for Fidacy signed payloads, against Fidacy's public JWKS.",
   "license": "Apache-2.0",
   "type": "module",

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/ucp-trust-verdict-signal.schema.json",
+  "title": "Fidacy UCP Trust-Verdict Signal value (v1)",
+  "description": "The value placed under the `com.fidacy.trust_verdict` key inside a UCP `signals` object (ucp.dev/schemas/shopping/types/signals.json). A verifiable third-party attestation: the compact EdDSA `jws` is the source of truth; the other fields are convenience hints until the JWS is verified.",
+  "type": "object",
+  "required": ["format", "jws"],
+  "additionalProperties": true,
+  "properties": {
+    "format": {
+      "const": "application/vc+jws",
+      "description": "Media type of the signed verdict."
+    },
+    "jws": {
+      "type": "string",
+      "description": "The compact EdDSA JWS (three base64url segments joined by '.'), independently verifiable against the public JWKS. Source of truth.",
+      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*$"
+    },
+    "kid": {
+      "type": "string",
+      "description": "The signing key id; matches the `did:web:fidacy.com#<kid>` issuer and the JWKS entry.",
+      "minLength": 1
+    },
+    "provider_jwks": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Public JWKS URL where the signing key is published (key discovery for the verifier)."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Decoded verdict claims, provided for convenience. Decoders MUST treat the verified `jws` contents as authoritative, not this field.",
+      "additionalProperties": true
+    }
+  }
+}

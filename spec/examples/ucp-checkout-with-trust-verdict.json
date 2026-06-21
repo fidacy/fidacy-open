@@ -1,0 +1,23 @@
+{
+  "id": "checkout_9f2a7c41e0b34d18",
+  "status": "requires_escalation",
+  "currency": "EUR",
+  "total": { "amount": "42.99", "currency": "EUR" },
+  "signals": {
+    "dev.ucp.buyer_ip": "203.0.113.42",
+    "com.fidacy.trust_verdict": {
+      "format": "application/vc+jws",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6IjF6b001N2JyamxsdWZOVHpDd0k1LWo1akZraUFzbHl6VkRiUEFjUl9mLU0iLCJ0eXAiOiJhcHBsaWNhdGlvbi92Yytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jMXpvTTU3YnJqbGx1Zk5UekN3STUtajVqRmtpQXNseXpWRGJQQWNSX2YtTSIsInN1YmplY3QiOiJkaWQ6d2ViOmFnZW50LmFjbWUuZXhhbXBsZSIsImRlY2lzaW9uIjoicmV2aWV3Iiwic2NvcmUiOjQ4LCJtb2RlbF92ZXJzaW9uIjoiZmlkYWN5LWVuZ2luZUAxLngiLCJhc3Nlc3NlZF9hdCI6IjIwMjYtMDYtMjFUMTI6MzQ6NTZaIn0.SAMPLEsignatureNOTaLIVEsignature_replace_with_a_real_EdDSA_signature_segment",
+      "kid": "1zoM57brjllufNTzCwI5-j5jFkiAslyzVDbPAcR_f-M",
+      "provider_jwks": "https://api.fidacy.com/.well-known/jwks.json",
+      "payload": {
+        "issuer": "did:web:fidacy.com#1zoM57brjllufNTzCwI5-j5jFkiAslyzVDbPAcR_f-M",
+        "subject": "did:web:agent.acme.example",
+        "decision": "review",
+        "score": 48,
+        "model_version": "fidacy-engine@1.x",
+        "assessed_at": "2026-06-21T12:34:56Z"
+      }
+    }
+  }
+}

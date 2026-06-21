@@ -1,0 +1,31 @@
+{
+  "name": "Acme Procurement Agent",
+  "description": "Purchases supplies within policy on behalf of Acme Corp.",
+  "url": "https://agents.acme.example/a2a",
+  "version": "1.0.0",
+  "preferredTransport": "JSONRPC",
+  "capabilities": {
+    "streaming": true,
+    "extensions": [
+      {
+        "uri": "https://fidacy.com/a2a/extensions/trust-verdict/v1",
+        "description": "Carries a Fidacy trust verdict (approve/review/deny) as a signed, independently verifiable credential.",
+        "required": false,
+        "params": {
+          "issuer": "did:web:fidacy.com",
+          "jwks_uri": "https://api.fidacy.com/.well-known/jwks.json",
+          "trust_list_uri": "https://api.fidacy.com/.well-known/fidacy-trust-list.json",
+          "verify_package": "@fidacy/verify"
+        }
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "purchase",
+      "name": "Make a purchase",
+      "description": "Place an order with a vendor within the configured spending policy.",
+      "tags": ["commerce", "payments"]
+    }
+  ]
+}

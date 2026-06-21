@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/spec/a2a-trust-verdict-extension.schema.json",
+  "title": "Fidacy A2A Trust-Verdict Extension — Agent Card Declaration",
+  "description": "The AgentExtension object an agent places in AgentCapabilities.extensions[] to declare it carries a Fidacy trust verdict. The verdict itself rides in the existing containers: AP2 risk_data (risk-data.schema.json) or A2A Task.metadata (a2a-metadata.schema.json), whose source of truth is the signed EdDSA vc_jws. This schema validates the DECLARATION only.",
+  "type": "object",
+  "required": ["uri"],
+  "additionalProperties": true,
+  "properties": {
+    "uri": {
+      "const": "https://fidacy.com/a2a/extensions/trust-verdict/v1",
+      "description": "The canonical, dereferenceable extension URI."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable summary of what the extension carries."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Whether a client MUST support the extension to interact. Fidacy's is opt-in, so false.",
+      "const": false
+    },
+    "params": {
+      "type": "object",
+      "required": ["issuer", "jwks_uri"],
+      "additionalProperties": true,
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "description": "Fidacy's did:web identity (bare DID; the signing kid appears in the payload issuer claim).",
+          "pattern": "^did:web:fidacy\\.com$"
+        },
+        "jwks_uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "Public JWKS where the active signing key is published."
+        },
+        "trust_list_uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "Signed registry of currently active key ids."
+        },
+        "verify_package": {
+          "type": "string",
+          "description": "The open-source verifier package (e.g. @fidacy/verify)."
+        }
+      }
+    }
+  }
+}

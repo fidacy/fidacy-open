@@ -21,6 +21,28 @@ importers:
         specifier: ^2.1.5
         version: 2.1.9(@types/node@22.19.21)
 
+  examples/a2a-trust-verdict:
+    dependencies:
+      '@a2a-js/sdk':
+        specifier: ^0.3.13
+        version: 0.3.13
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@fidacy/verify':
+        specifier: workspace:*
+        version: link:../../packages/verify
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.21
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+
   examples/quickstart-node:
     dependencies:
       '@fidacy/sdk':
@@ -64,6 +86,21 @@ importers:
         version: 3.0.1(ajv@8.20.0)
 
 packages:
+
+  '@a2a-js/sdk@0.3.13':
+    resolution: {integrity: sha512-BZr0f9JVNQs3GKOM9xINWCh6OKIJWZFPyqqVqTym5mxO2Eemc6I/0zL7zWnljHzGdaf5aZQyQN5xa6PSH62q+A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@bufbuild/protobuf': ^2.10.2
+      '@grpc/grpc-js': ^1.11.0
+      express: ^4.21.2 || ^5.1.0
+    peerDependenciesMeta:
+      '@bufbuild/protobuf':
+        optional: true
+      '@grpc/grpc-js':
+        optional: true
+      express:
+        optional: true
 
   '@babel/runtime@7.29.7':
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
@@ -1365,6 +1402,10 @@ packages:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
 
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
+    hasBin: true
+
   vite-node@2.1.9:
     resolution: {integrity: sha512-AM9aQ/IPrW/6ENLQg3AGY4K1N2TGZdR5e4gu/MmmR2xR3Ll1+dib+nook92g4TV3PXVyeyxdWwtaCAiUL0hMxA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -1437,6 +1478,10 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@a2a-js/sdk@0.3.13':
+    dependencies:
+      uuid: 11.1.1
 
   '@babel/runtime@7.29.7': {}
 
@@ -2559,6 +2604,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   universalify@0.1.2: {}
+
+  uuid@11.1.1: {}
 
   vite-node@2.1.9(@types/node@22.19.21):
     dependencies:

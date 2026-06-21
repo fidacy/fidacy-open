@@ -62,6 +62,22 @@ importers:
         specifier: ^5.6.3
         version: 5.9.3
 
+  examples/ucp-trust-verdict:
+    dependencies:
+      '@fidacy/verify':
+        specifier: workspace:*
+        version: link:../../packages/verify
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.21
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+
   packages/sdk:
     dependencies:
       '@fidacy/verify':

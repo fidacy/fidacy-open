@@ -37,6 +37,13 @@ Or add the packages to your own project (published on npm, Apache-2.0):
 npm i @fidacy/sdk @fidacy/verify
 ```
 
+**Python?** Same flow, two dependencies — see [`quickstart-python/`](./quickstart-python):
+
+```bash
+cd fidacy-open/quickstart-python && pip install -r requirements.txt
+FIDACY_API_KEY=fky_test_…  python3 quickstart.py
+```
+
 ```ts
 import { Fidacy } from '@fidacy/sdk';
 import { verifyRiskPayload } from '@fidacy/verify';

@@ -6,7 +6,7 @@ CrabTrap makes a local allow/deny/timeout decision for every agent request and w
 
 > **Observe mode is non-blocking.** The adapter never sits in the request path and never alters CrabTrap's decision. If Fidacy is slow or unreachable, the CrabTrap flow is untouched and the adapter falls back to a `review` floor for its own record. A single bad event never throws out of the loop.
 
-This is an **independent complement** to CrabTrap, MIT-licensed. It is **not endorsed by, official to, or partnered with Brex**, and it does **not** claim Brex uses Fidacy. "CrabTrap" and "Brex" are referenced only to describe interoperability.
+This is an **independent complement** to CrabTrap (which is MIT-licensed). It is **not endorsed by, official to, or partnered with Brex**, and it does **not** claim Brex uses Fidacy. "CrabTrap" and "Brex" are referenced only to describe interoperability.
 
 ## Install
 
@@ -91,4 +91,4 @@ See [`examples/crabtrap-observe`](../../examples/crabtrap-observe) — runs end-
 
 ## License
 
-MIT. Part of [fidacy-open](https://github.com/fidacy/fidacy-open).
+Apache-2.0. Part of [fidacy-open](https://github.com/fidacy/fidacy-open).

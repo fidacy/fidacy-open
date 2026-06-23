@@ -43,6 +43,31 @@ importers:
         specifier: ^5.6.3
         version: 5.9.3
 
+  examples/crabtrap-observe:
+    dependencies:
+      '@fidacy/crabtrap':
+        specifier: workspace:*
+        version: link:../../packages/fidacy-crabtrap
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@fidacy/verify':
+        specifier: workspace:*
+        version: link:../../packages/verify
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.21
+      jose:
+        specifier: ^5.9.6
+        version: 5.10.0
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+
   examples/quickstart-node:
     dependencies:
       '@fidacy/sdk':
@@ -77,6 +102,22 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
+
+  packages/fidacy-crabtrap:
+    dependencies:
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      '@fidacy/verify':
+        specifier: workspace:*
+        version: link:../verify
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.21
+      jose:
+        specifier: ^5.9.6
+        version: 5.10.0
 
   packages/sdk:
     dependencies:

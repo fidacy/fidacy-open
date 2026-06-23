@@ -1,0 +1,46 @@
+{
+  "name": "@fidacy/crabtrap",
+  "version": "0.1.0",
+  "description": "Observe-mode adapter that puts a neutral, portable, signed Fidacy verdict on top of Brex CrabTrap's local audit decisions. Non-blocking; never alters the CrabTrap flow.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fidacy/sdk": "workspace:*",
+    "@fidacy/verify": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "jose": "^5.9.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fidacy/fidacy-open.git",
+    "directory": "packages/fidacy-crabtrap"
+  },
+  "homepage": "https://github.com/fidacy/fidacy-open/tree/main/packages/fidacy-crabtrap#readme",
+  "bugs": {
+    "url": "https://github.com/fidacy/fidacy-open/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@fidacy/example-hermes",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Seal a sample Hermes L402 / Lightning payment with a signed, independently verifiable Fidacy authorization verdict using @fidacy/agent/hermes.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "pay": "node pay.mjs"
+  },
+  "dependencies": {
+    "@fidacy/agent": "workspace:*",
+    "@fidacy/sdk": "workspace:*"
+  }
+}

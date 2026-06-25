@@ -1,7 +1,7 @@
 {
-  "name": "@fidacy/sdk",
-  "version": "0.1.2",
-  "description": "Thin, typed client for the public Fidacy API. Bundles @fidacy/verify so you can check every signed verdict yourself.",
+  "name": "@fidacy/agent",
+  "version": "0.1.0",
+  "description": "A universal Fidacy trust guard for any AI agent runtime. Wraps an agent ACTION with a cryptographically signed, independently verifiable Fidacy verdict. Ships thin adapters for OpenClaw and Hermes Agent.",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
@@ -10,6 +10,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./openclaw": {
+      "types": "./dist/openclaw.d.ts",
+      "import": "./dist/openclaw.js",
+      "require": "./dist/openclaw.cjs"
+    },
+    "./hermes": {
+      "types": "./dist/hermes.d.ts",
+      "import": "./dist/hermes.js",
+      "require": "./dist/hermes.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -24,17 +34,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fidacy/verify": "workspace:*"
+    "@fidacy/sdk": "workspace:*"
   },
   "devDependencies": {
-    "jose": "^5.9.6"
+    "@types/node": "^22.9.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fidacy/fidacy-open.git",
-    "directory": "packages/sdk"
+    "directory": "packages/agent"
   },
-  "homepage": "https://github.com/fidacy/fidacy-open/tree/main/packages/sdk#readme",
+  "homepage": "https://github.com/fidacy/fidacy-open/tree/main/packages/agent#readme",
   "bugs": {
     "url": "https://github.com/fidacy/fidacy-open/issues"
   },

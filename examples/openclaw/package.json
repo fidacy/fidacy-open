@@ -1,0 +1,15 @@
+{
+  "name": "@fidacy/example-openclaw",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Guard a sample OpenClaw tool action with a signed, independently verifiable Fidacy verdict using @fidacy/agent/openclaw.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "guard": "node guard.mjs"
+  },
+  "dependencies": {
+    "@fidacy/agent": "workspace:*",
+    "@fidacy/sdk": "workspace:*"
+  }
+}

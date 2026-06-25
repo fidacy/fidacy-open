@@ -43,6 +43,15 @@ importers:
         specifier: ^5.6.3
         version: 5.9.3
 
+  examples/claude-code:
+    dependencies:
+      '@fidacy/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
   examples/crabtrap-observe:
     dependencies:
       '@fidacy/crabtrap':
@@ -67,6 +76,24 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
+
+  examples/hermes:
+    dependencies:
+      '@fidacy/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+
+  examples/openclaw:
+    dependencies:
+      '@fidacy/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
 
   examples/quickstart-node:
     dependencies:
@@ -102,6 +129,16 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
+
+  packages/agent:
+    dependencies:
+      '@fidacy/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.21
 
   packages/fidacy-crabtrap:
     dependencies:

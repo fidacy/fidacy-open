@@ -39,7 +39,7 @@ export interface FidacyOptions {
 export type Decision = 'approve' | 'review' | 'deny';
 
 export interface AssessParams {
-  kind?: 'ap2_payment';
+  kind?: 'ap2_payment' | 'message_send' | 'voice_call' | 'custom' | 'claim_document';
   mandate: unknown;
   mandateType?: string;
   a2a?: { task_id: string };

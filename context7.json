@@ -1,0 +1,14 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Fidacy Open",
+  "description": "Open-source clients and verifiers for Fidacy, the neutral non-custodial trust and proof layer for AI agent actions: @fidacy/verify (offline signature verification against the public JWKS, with a conformance corpus), @fidacy/sdk (typed API client that verifies every response), @fidacy/agent (universal trust guard with OpenClaw and Hermes adapters) and @fidacy/crabtrap (portable signed verdicts on top of Brex CrabTrap).",
+  "folders": ["packages", "examples", "quickstart"],
+  "excludeFolders": ["node_modules", "dist"],
+  "rules": [
+    "Verdicts are Ed25519-signed JWS, verified against https://api.fidacy.com/.well-known/jwks.json or an injected JWKS (fully offline).",
+    "A verdict is a signed opinion (approve, review, deny) bound to the action; treat review as not allowed, and treat verification errors as deny (fail closed).",
+    "The audit chain is tamper-evident and checkpointed to the Bitcoin blockchain; never describe it as immutable, describe it as third-party verifiable.",
+    "Fidacy never holds funds, keys or content; only hashes and verdicts travel."
+  ],
+  "previousVersions": []
+}

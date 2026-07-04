@@ -1,6 +1,7 @@
 # Fidacy — Open verification + SDK
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/fidacy/fidacy-open/badge)](https://securityscorecards.dev/viewer/?uri=github.com/fidacy/fidacy-open)
 
 Open verification + SDK for Fidacy — the external, signed trust layer for agent payments.
 
@@ -9,6 +10,11 @@ Open verification + SDK for Fidacy — the external, signed trust layer for agen
 Every verdict Fidacy issues is signed. These packages let you fetch our public keys
 and cryptographically verify that a risk payload or webhook genuinely came from Fidacy
 and was not tampered with — entirely client-side, with no need to call back to us.
+
+"Anyone can verify" is a testable claim here, not a slogan: a
+[conformance corpus](./packages/verify/conformance) ships signed fixtures plus
+expected outcomes, so a port of the verifier in any language proves
+compatibility offline (`node conformance/run.mjs`, 8/8 or it is not compatible).
 
 ## Packages
 

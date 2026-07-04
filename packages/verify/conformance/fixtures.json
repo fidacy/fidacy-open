@@ -1,0 +1,84 @@
+{
+  "v": "fidacy-verify-conformance.v1",
+  "description": "Conformance corpus for ports of @fidacy/verify. Verify each case offline against the embedded jwks with now pinned to the given instant; a compatible implementation reproduces every expectation. The signing key is throwaway and unpublished.",
+  "now": "2026-07-04T12:00:00.000Z",
+  "issuerPrefix": "did:web:fidacy.com#",
+  "jwks": {
+    "keys": [
+      {
+        "crv": "Ed25519",
+        "x": "IRVLZ2n1JKj3E1JE1571cIagOGkEo_nAJw2qhBTCy6M",
+        "kty": "OKP",
+        "kid": "conformance-2026-07",
+        "alg": "EdDSA",
+        "use": "sig"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "valid_approve",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDciLCJ0eXAiOiJmaWRhY3ktcmlzaytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsImRlY2lzaW9uIjoiYXBwcm92ZSIsInNjb3JlIjoxMiwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIn0.bqPAD1c5ecwh3p3t0-ZrmgtntkbZC4DJpfG9jLRAOZhUQ_d4TDOMq-lV2J6xlxjxfMBQ0WYgCmsX-C_23pJOAg",
+      "expect": {
+        "valid": true,
+        "decision": "approve"
+      }
+    },
+    {
+      "id": "valid_deny",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDciLCJ0eXAiOiJmaWRhY3ktcmlzaytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsImRlY2lzaW9uIjoiZGVueSIsInNjb3JlIjo5MSwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIn0.WWJdb9Srk6cCcckeUpnfyykfp3i7WjfT0y9dRvIPBk9qMrXgg7hhH6iX5HT5zq-4lKjjjGia1yWwBLVh1CwKBw",
+      "expect": {
+        "valid": true,
+        "decision": "deny"
+      }
+    },
+    {
+      "id": "tampered_payload",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDciLCJ0eXAiOiJmaWRhY3ktcmlzaytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsImRlY2lzaW9uIjoiZGVueSIgICAsInNjb3JlIjoxMiwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIn0.bqPAD1c5ecwh3p3t0-ZrmgtntkbZC4DJpfG9jLRAOZhUQ_d4TDOMq-lV2J6xlxjxfMBQ0WYgCmsX-C_23pJOAg",
+      "expect": {
+        "valid": false,
+        "code": "invalid_signature"
+      }
+    },
+    {
+      "id": "unknown_kid",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6Im5vdC1pbi1qd2tzIiwidHlwIjoiZmlkYWN5LXJpc2srandzIn0.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsImRlY2lzaW9uIjoiYXBwcm92ZSIsInNjb3JlIjoxMiwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIn0.JOwfmRqhvXBnH9LAW4SEc6GNhT05a_ClchAfVLZ2ia7x-AXkxE6z9TICebH5b06-Jq57Px9of8P7mYs4fDW_Dw",
+      "expect": {
+        "valid": false,
+        "code": "unknown_kid"
+      }
+    },
+    {
+      "id": "wrong_issuer",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDciLCJ0eXAiOiJmaWRhY3ktcmlzaytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmF0dGFja2VyLmV4YW1wbGUjazEiLCJzdWJqZWN0IjoiYWdlbnQ6Y29uZm9ybWFuY2UiLCJkZWNpc2lvbiI6ImFwcHJvdmUiLCJzY29yZSI6MTIsInNpZ25hbHMiOnsiY29uZm9ybWFuY2UiOnRydWV9LCJtb2RlbF92ZXJzaW9uIjoiZmlkYWN5LXJpc2stMC4xLjAiLCJhc3Nlc3NlZF9hdCI6IjIwMjYtMDctMDRUMTI6MDA6MDAuMDAwWiJ9.TwVcJB0aMQEEg0RJUQ9qHDscxj5WNn03LbvmhfzEt7nPf86TYihtpf8HSGlvFSbZU-_x92oBkKVTp38KJSVeDA",
+      "expect": {
+        "valid": false,
+        "code": "wrong_issuer"
+      }
+    },
+    {
+      "id": "expired",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDcifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsImRlY2lzaW9uIjoiYXBwcm92ZSIsInNjb3JlIjoxMiwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIiwiZXhwIjoxNzgzMTYyODAwfQ.L6e8g7QqVk65TusNgq-iyfRMtH_WGw_sTo3_t8ScO4BWToQ_-KLiEW_VF5IUq38tuXVuM4DYh9rC66fO1zGlBQ",
+      "expect": {
+        "valid": false,
+        "code": "expired"
+      }
+    },
+    {
+      "id": "missing_required_claim",
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImNvbmZvcm1hbmNlLTIwMjYtMDciLCJ0eXAiOiJmaWRhY3ktcmlzaytqd3MifQ.eyJpc3N1ZXIiOiJkaWQ6d2ViOmZpZGFjeS5jb20jY29uZm9ybWFuY2UtMjAyNi0wNyIsInN1YmplY3QiOiJhZ2VudDpjb25mb3JtYW5jZSIsInNjb3JlIjoxMiwic2lnbmFscyI6eyJjb25mb3JtYW5jZSI6dHJ1ZX0sIm1vZGVsX3ZlcnNpb24iOiJmaWRhY3ktcmlzay0wLjEuMCIsImFzc2Vzc2VkX2F0IjoiMjAyNi0wNy0wNFQxMjowMDowMC4wMDBaIn0.QuBg7DAd0N1g137xA9ZHSaqy6fE1KD60Nk6TfMkCaaOVIAlSSXQ8PMrCsy96jE3Fqtyy-aQmhKC4BVG2BBuHDw",
+      "expect": {
+        "valid": false,
+        "code": "malformed"
+      }
+    },
+    {
+      "id": "not_a_jws",
+      "jws": "definitely.not-a-valid",
+      "expect": {
+        "valid": false,
+        "code": "malformed"
+      }
+    }
+  ]
+}

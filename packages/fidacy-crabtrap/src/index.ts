@@ -111,4 +111,8 @@ export type {
   ObserveDeps,
 } from './types.js';
 
-export const VERSION = '0.0.0';
+// Injected at build time from package.json (see tsup.config.ts define) so it can
+// never drift from the published version. Dev/test runs fall back to "dev".
+declare const __PKG_VERSION__: string | undefined;
+export const VERSION: string =
+  typeof __PKG_VERSION__ === 'string' ? __PKG_VERSION__ : 'dev';

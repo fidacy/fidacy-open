@@ -1,6 +1,6 @@
 {
   "name": "@fidacy/crabtrap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Observe-mode adapter that puts a neutral, portable, signed Fidacy verdict on top of Brex CrabTrap's local audit decisions. Non-blocking; never alters the CrabTrap flow.",
   "license": "Apache-2.0",
   "type": "module",

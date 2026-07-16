@@ -38,8 +38,21 @@ export interface FidacyOptions {
 
 export type Decision = 'approve' | 'review' | 'deny';
 
+/**
+ * Action kinds accepted by the assess endpoint.
+ * Kept in sync with @fidacy/mcp's assess_action enum and the engine /v1/assess contract.
+ * The verdict object is action-generic by design: payment is the first profile, not the taxonomy.
+ */
+export type AssessKind =
+  | 'ap2_payment'
+  | 'message_send'
+  | 'voice_call'
+  | 'claim_document'
+  | 'custom';
+
 export interface AssessParams {
-  kind?: 'ap2_payment' | 'message_send' | 'voice_call' | 'custom' | 'claim_document';
+  /** Defaults to 'ap2_payment' when omitted (backward compatible). */
+  kind?: AssessKind;
   mandate: unknown;
   mandateType?: string;
   a2a?: { task_id: string };
@@ -284,4 +297,8 @@ async function toFidacyError(res: Response): Promise<FidacyError> {
 export { verifyRiskPayload, verifyWebhook } from '@fidacy/verify';
 export type { WebhookEvent } from '@fidacy/verify';
 
-export const VERSION = '0.0.0';
+// Injected at build time from package.json (see tsup.config.ts define) so it can
+// never drift from the published version. Dev/test runs fall back to "dev".
+declare const __SDK_VERSION__: string | undefined;
+export const VERSION: string =
+  typeof __SDK_VERSION__ === 'string' ? __SDK_VERSION__ : 'dev';

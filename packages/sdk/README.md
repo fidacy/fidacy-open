@@ -37,6 +37,29 @@ console.log('decisions match:', verified.claims.decision === result.decision);
 
 `fidacy.verify` is `@fidacy/verify`'s `verifyRiskPayload`, bundled so you don't add a second dependency. The `assess` call itself does no verification: it returns the API's response as-is, and you decide whether to trust it by checking the signature against Fidacy's public JWKS.
 
+### Not just payments
+
+The verdict is action-generic. `kind` (default `'ap2_payment'`) accepts every action the engine assesses: `'ap2_payment' | 'message_send' | 'voice_call' | 'claim_document' | 'custom'` (the exported `AssessKind` type). An agent sending a customer message, for example:
+
+```ts
+const verdict = await fidacy.assess({
+  kind: 'message_send',
+  mandate: {
+    kind: 'message_send',
+    actor_agent: 'did:web:agents.example.com:support-1',
+    principal: 'org:example',
+    channel: 'email',                 // 'whatsapp' | 'email' | 'sms'
+    recipient_ref: 'cust_8f31',      // pseudonymized ref — never a raw address
+    content_hash: 'sha256-9b2f…',    // hash only — the message never leaves you
+    requested_at: Math.floor(Date.now() / 1000), // epoch seconds
+  },
+});
+// verdict.riskPayloadJws is the signed, independently verifiable record
+// that this send was assessed before it happened.
+```
+
+Each kind validates against its public JSON schema on the engine side; the payment path (`ap2_payment`) is unchanged and remains the default.
+
 ### What `assess` returns
 
 ```ts

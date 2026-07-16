@@ -6,7 +6,7 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 };
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/openclaw.ts', 'src/hermes.ts'],
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,

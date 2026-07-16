@@ -2,7 +2,7 @@
 
 A universal Fidacy **trust guard** for any AI agent runtime.
 
-Give it an agent ACTION (who is acting, on whose behalf, and what the action is); it asks Fidacy for a cryptographically signed verdict (`approve` / `review` / `deny`) and verifies that signature against Fidacy's public JWKS before handing it back. Anyone can re-check the verdict later with [`@fidacy/verify`](../verify), without trusting you and without a Fidacy account. The verdict travels.
+Give it an agent ACTION (who is acting, on whose behalf, and what the action is); it asks Fidacy for a cryptographically signed verdict (`approve` / `review` / `deny`) and verifies that signature against Fidacy's public JWKS before handing it back. Anyone can re-check the verdict later with [`@fidacy/verify`](https://www.npmjs.com/package/@fidacy/verify), without trusting you and without a Fidacy account. The verdict travels.
 
 It is framework-agnostic: the action is structurally typed, hashing uses Web Crypto (Node 18+, browser, edge), and the only runtime dependency is `@fidacy/sdk`. The API key is held by the SDK client and is never logged or folded into a verdict.
 
@@ -45,7 +45,7 @@ Every action reduces to the engine's `custom` mandate: `actor_agent = agent`, `p
 
 ## Verify it yourself
 
-A verdict is only worth something if you can check it. Each `verdict.riskPayloadJws` is an EdDSA-signed JWS; verify it independently with [`@fidacy/verify`](../verify):
+A verdict is only worth something if you can check it. Each `verdict.riskPayloadJws` is an EdDSA-signed JWS; verify it independently with [`@fidacy/verify`](https://www.npmjs.com/package/@fidacy/verify):
 
 ```ts
 import { verifyRiskPayload } from '@fidacy/sdk'; // re-exported from @fidacy/verify
@@ -58,9 +58,9 @@ EdDSA (Ed25519) is the only accepted algorithm: a forged `alg: none` / `HS256` t
 
 ## Examples
 
-- [`examples/claude-code`](../../examples/claude-code) — a Claude Code `PreToolUse` hook that gates every tool call on a signed Fidacy verdict (the universal connector).
-- [`examples/openclaw`](../../examples/openclaw) — `createOpenClawGuard().beforeAction()` around a sample OpenClaw action.
-- [`examples/hermes`](../../examples/hermes) — `createHermesGuard().beforePayment()` around a sample L402 payment.
+- [`examples/claude-code`](https://github.com/fidacy/fidacy-open/tree/main/examples/claude-code) — a Claude Code `PreToolUse` hook that gates every tool call on a signed Fidacy verdict (the universal connector).
+- [`examples/openclaw`](https://github.com/fidacy/fidacy-open/tree/main/examples/openclaw) — `createOpenClawGuard().beforeAction()` around a sample OpenClaw action.
+- [`examples/hermes`](https://github.com/fidacy/fidacy-open/tree/main/examples/hermes) — `createHermesGuard().beforePayment()` around a sample L402 payment.
 
 ## License
 

@@ -66,6 +66,13 @@ The convenience fields are untrusted hints until the JWS is verified. A recipien
 The verified claims are the [Risk Payload](./risk-payload.md): `issuer / subject / decision / score /
 model_version / assessed_at`, plus opaque advisory `signals`.
 
+**Signing input.** The JWS payload is the claims serialized with
+[RFC 8785 (JCS)](https://www.rfc-editor.org/rfc/rfc8785) canonical JSON, UTF-8 encoded, `typ`
+`application/vc+jws`. A verifier verifies the exact payload bytes in the JWS and does not
+re-canonicalize; JCS is what makes the signing input deterministic across implementations. See
+[Risk Payload → How it is signed](./risk-payload.md#how-it-is-signed) for the byte-level detail. This
+is the natural point of alignment with a shared attestation envelope (UCP #534).
+
 ## What this binding deliberately does NOT do
 
 Grounded against the live UCP spec (`ucp.dev`, release 2026-04-08):

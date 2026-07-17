@@ -16,7 +16,17 @@ The claims are signed as a **compact JWS** (RFC 7515):
 | Algorithm       | `EdDSA` (Ed25519)                                                  |
 | `typ` header    | `application/vc+jws`                                               |
 | `kid` header    | The signing key id; also the fragment of the `issuer` DID         |
+| Payload bytes   | The claims serialized as **RFC 8785 (JCS)** canonical JSON, UTF-8 encoded |
 | Encoding        | Compact serialization — `base64url(header).base64url(payload).base64url(signature)` |
+
+**Canonicalization.** The signing input is the claims object serialized with
+[RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785):
+lexicographically ordered keys, no insignificant whitespace, deterministic number and
+string forms. A verifier verifies the exact payload bytes carried in the compact JWS and
+does **not** re-canonicalize, so JCS is not required to verify a Fidacy verdict; it is how
+Fidacy produces a deterministic, reproducible signing input, which is the property that lets
+independent implementations agree byte-for-byte (relevant to a shared attestation envelope,
+e.g. UCP #534).
 
 The signature is verifiable against Fidacy's **public JWKS**:
 

@@ -12,6 +12,10 @@
  *  - EdDSA (Ed25519) only. The verifier locks `{ algorithms: ['EdDSA'] }`, so a
  *    forged `alg: HS256` / `alg: none` token is rejected without verification
  *    (algorithm-confusion defense).
+ *  - JWKS fetches are https-only and never follow redirects. There is no
+ *    exception for localhost: local testing injects `jwks` or a custom `fetch`.
+ *  - Webhook verification binds the RAW body to the signed bytes and enforces a
+ *    freshness window over `created`. Fail closed on any mismatch.
  *  - Errors never include the raw JWS or any payload bytes.
  *  - JWKS is injectable: when `jwks` is provided there is zero network access.
  */
@@ -43,7 +47,7 @@ export interface RiskPayloadClaims {
 }
 
 export interface VerifyOptions {
-  /** JWKS endpoint. Default: Fidacy's public JWKS. */
+  /** JWKS endpoint. https only — non-https URLs are rejected. Default: Fidacy's public JWKS. */
   jwksUrl?: string;
   /** Inject a JWKS document → no network access at all. */
   jwks?: { keys: JWK[] };
@@ -72,6 +76,7 @@ export type FidacyVerificationCode =
   | 'wrong_issuer'
   | 'unknown_kid'
   | 'jwks_unavailable'
+  | 'payload_mismatch'
   | 'malformed';
 
 export class FidacyVerificationError extends Error {
@@ -83,10 +88,16 @@ export class FidacyVerificationError extends Error {
   }
 }
 
+/**
+ * The signed webhook envelope. The engine signs exactly this shape and sends
+ * its canonical (JCS) form as the request body, so the raw body and the signed
+ * bytes are identical. `id` is the delivery id (idempotency key); `created` is
+ * epoch seconds (freshness window).
+ */
 export interface WebhookEvent {
   type: string;
-  id?: string;
-  created?: number;
+  id: string;
+  created: number;
   data: unknown;
   [k: string]: unknown;
 }
@@ -126,12 +137,29 @@ async function resolveJwks(
   fetchImpl: typeof fetch,
   now: number,
 ): Promise<JWK[]> {
+  // https only, absolute rule — no localhost exception. Local testing injects
+  // `jwks` inline or a custom `fetch`, both already supported by the API. A
+  // redirect is a failure, not a hop: following one would let an https URL
+  // hand key resolution to a host nobody pinned.
+  let parsed: URL;
+  try {
+    parsed = new URL(jwksUrl);
+  } catch {
+    throw new FidacyVerificationError('jwks_unavailable', 'JWKS URL is not a valid URL');
+  }
+  if (parsed.protocol !== 'https:') {
+    throw new FidacyVerificationError('jwks_unavailable', 'JWKS URL must be https');
+  }
+
   const cached = jwksCache.get(jwksUrl);
   if (cached && cached.expiresAt > now) return cached.keys;
 
   let body: unknown;
   try {
-    const res = await fetchImpl(jwksUrl, { headers: { accept: 'application/json' } });
+    const res = await fetchImpl(jwksUrl, {
+      headers: { accept: 'application/json' },
+      redirect: 'error',
+    });
     if (!res.ok) {
       throw new FidacyVerificationError(
         'jwks_unavailable',
@@ -189,6 +217,7 @@ interface VerifiedCompact {
 }
 
 const decoder = new TextDecoder();
+const encoder = new TextEncoder();
 
 /**
  * Decode the protected header, enforce the EdDSA algorithm lock, resolve the
@@ -267,6 +296,13 @@ function parseJsonObject(bytes: Uint8Array): Record<string, unknown> {
   return parsed as Record<string, unknown>;
 }
 
+function bytesEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i += 1) diff |= (a[i] ?? 0) ^ (b[i] ?? 0);
+  return diff === 0;
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -314,9 +350,24 @@ export async function verifyRiskPayload(
   };
 }
 
+/**
+ * Verify a Fidacy webhook delivery. The signature (`x-fidacy-signature`) is a
+ * compact EdDSA JWS over the webhook envelope, and the engine sends the exact
+ * signed bytes as the request body. Verification therefore requires ALL of:
+ *
+ *  1. the JWS signature checks out against the JWKS (EdDSA only);
+ *  2. the RAW body equals the signed payload byte for byte — a body that was
+ *     tampered with in transit (or a signature replayed onto a different body)
+ *     is rejected with `payload_mismatch`;
+ *  3. `created` is within `toleranceSec` of now (default 300s) — an old
+ *     delivery replayed later is rejected with `expired`.
+ *
+ * Pass the raw body EXACTLY as received (before any JSON parsing/re-encoding).
+ * Fail closed: on any error, do not process the event.
+ */
 export async function verifyWebhook(params: {
-  payload: string; // raw body — accepted for API symmetry; the SIGNED payload is trusted
-  signatureHeader: string; // x-fidacy-signature: a compact EdDSA JWS over the event JSON
+  payload: string; // raw request body, byte-exact as received
+  signatureHeader: string; // x-fidacy-signature: a compact EdDSA JWS over the event envelope
   jwksUrl?: string;
   jwks?: { keys: JWK[] };
   toleranceSec?: number;
@@ -324,11 +375,6 @@ export async function verifyWebhook(params: {
   cacheTtlMs?: number;
   fetch?: typeof fetch;
 }): Promise<WebhookEvent> {
-  // `payload` (raw body) and `toleranceSec` are accepted for API symmetry; the
-  // authentic event is the SIGNED payload, so we trust that, not the raw body.
-  void params.payload;
-  void (params.toleranceSec ?? WEBHOOK_TOLERANCE_SEC);
-
   const now = (params.now ?? new Date()).getTime();
   const { payloadBytes } = await verifyCompact(
     params.signatureHeader,
@@ -341,10 +387,31 @@ export async function verifyWebhook(params: {
     now,
   );
 
+  // The body the receiver got must be EXACTLY the bytes that were signed.
+  if (!bytesEqual(encoder.encode(params.payload), payloadBytes)) {
+    throw new FidacyVerificationError(
+      'payload_mismatch',
+      'Raw body does not match the signed event payload',
+    );
+  }
+
   const obj = parseJsonObject(payloadBytes);
   if (typeof obj.type !== 'string') {
     throw new FidacyVerificationError('malformed', 'Webhook event is missing a type');
   }
+  if (typeof obj.id !== 'string' || obj.id.length === 0) {
+    throw new FidacyVerificationError('malformed', 'Webhook event is missing an id');
+  }
+  if (typeof obj.created !== 'number' || !Number.isFinite(obj.created)) {
+    throw new FidacyVerificationError('malformed', 'Webhook event is missing created');
+  }
+
+  // Freshness window, both directions (skewed clocks count as outside).
+  const toleranceMs = (params.toleranceSec ?? WEBHOOK_TOLERANCE_SEC) * 1000;
+  if (Math.abs(now - obj.created * 1000) > toleranceMs) {
+    throw new FidacyVerificationError('expired', 'Webhook event is outside the tolerance window');
+  }
+
   return obj as WebhookEvent;
 }
 

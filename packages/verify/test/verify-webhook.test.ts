@@ -1,94 +1,132 @@
-import { describe, expect, it } from 'vitest';
-import { verifyWebhook } from '../src/index.js';
-import { forgeToken, jwksOf, makeTestKey, signPayload } from './fixtures.js';
+import { CompactSign, calculateJwkThumbprint, exportJWK, generateKeyPair, type JWK } from 'jose';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { FidacyVerificationError, verifyWebhook } from '../src/index';
 
-const sampleEvent = {
-  id: 'asmt_1:assessment.completed',
-  type: 'assessment.completed',
-  created: 1_750_000_000,
-  livemode: true,
-  data: {
-    assessment_id: 'asmt_1',
-    decision: 'approve',
-    risk_level: 'low',
-    risk_score: 12,
-    agent_id: 'agent_1',
-    kind: 'payment',
-  },
-};
+/**
+ * Webhook verification under the v0.2.0 contract: the engine signs the envelope
+ * {type, id, created, data} and sends the exact signed bytes as the request
+ * body. Verification requires the signature, the byte-exact body match, and a
+ * fresh `created`. Fail closed on all of it.
+ */
+
+const encoder = new TextEncoder();
+
+let privateKey: CryptoKey;
+let publicJwk: JWK;
+let kid: string;
+
+beforeAll(async () => {
+  const pair = await generateKeyPair('EdDSA', { crv: 'Ed25519', extractable: true });
+  privateKey = pair.privateKey as CryptoKey;
+  const pub = await exportJWK(pair.publicKey);
+  kid = await calculateJwkThumbprint(pub, 'sha256');
+  publicJwk = { ...pub, kid, alg: 'EdDSA', use: 'sig' };
+});
+
+function jwks() {
+  return { keys: [publicJwk] };
+}
+
+async function sign(payload: string): Promise<string> {
+  return new CompactSign(encoder.encode(payload))
+    .setProtectedHeader({ alg: 'EdDSA', kid, typ: 'application/vc+jws' })
+    .sign(privateKey);
+}
+
+const now = new Date('2026-07-18T12:00:00.000Z');
+const createdSec = Math.floor(now.getTime() / 1000);
+
+function envelopeJson(overrides: Record<string, unknown> = {}): string {
+  return JSON.stringify({
+    created: createdSec,
+    data: { agent_id: 'agt_1', score: 12 },
+    id: 'del_123',
+    type: 'assessment.completed',
+    ...overrides,
+  });
+}
 
 describe('verifyWebhook', () => {
-  it('valid signed event → returns the decoded authentic event', async () => {
-    const key = await makeTestKey();
-    const signatureHeader = await signPayload(key, sampleEvent, 'application/vc+jws');
-
+  it('valid signed event with matching raw body → returns the decoded authentic event', async () => {
+    const body = envelopeJson();
     const event = await verifyWebhook({
-      payload: JSON.stringify(sampleEvent),
-      signatureHeader,
-      jwks: jwksOf(key),
+      payload: body,
+      signatureHeader: await sign(body),
+      jwks: jwks(),
+      now,
     });
-
     expect(event.type).toBe('assessment.completed');
-    expect(event.id).toBe('asmt_1:assessment.completed');
-    expect(event.created).toBe(1_750_000_000);
-    expect(event.data).toEqual(sampleEvent.data);
+    expect(event.id).toBe('del_123');
+    expect(event.created).toBe(createdSec);
+    expect(event.data).toEqual({ agent_id: 'agt_1', score: 12 });
   });
 
-  it('trusts the SIGNED payload, not the raw body (raw body is ignored)', async () => {
-    const key = await makeTestKey();
-    const signatureHeader = await signPayload(key, sampleEvent);
+  it('raw body that differs from the signed payload → payload_mismatch (fail closed)', async () => {
+    const signedBody = envelopeJson();
+    const tamperedBody = envelopeJson({ data: { agent_id: 'agt_1', score: 99 } });
+    await expect(
+      verifyWebhook({
+        payload: tamperedBody,
+        signatureHeader: await sign(signedBody),
+        jwks: jwks(),
+        now,
+      }),
+    ).rejects.toMatchObject({ code: 'payload_mismatch' });
+  });
 
-    const event = await verifyWebhook({
-      payload: '{"type":"attacker.injected"}', // lying raw body
-      signatureHeader,
-      jwks: jwksOf(key),
-    });
+  it('stale created outside toleranceSec → expired (replay defense)', async () => {
+    const body = envelopeJson({ created: createdSec - 3600 });
+    await expect(
+      verifyWebhook({ payload: body, signatureHeader: await sign(body), jwks: jwks(), now }),
+    ).rejects.toMatchObject({ code: 'expired' });
+  });
 
-    expect(event.type).toBe('assessment.completed');
+  it('missing created or id → malformed (fail closed on legacy shapes)', async () => {
+    const noCreated = JSON.stringify({ type: 'assessment.completed', id: 'del_1', data: {} });
+    await expect(
+      verifyWebhook({ payload: noCreated, signatureHeader: await sign(noCreated), jwks: jwks(), now }),
+    ).rejects.toMatchObject({ code: 'malformed' });
+
+    const noId = JSON.stringify({ type: 'assessment.completed', created: createdSec, data: {} });
+    await expect(
+      verifyWebhook({ payload: noId, signatureHeader: await sign(noId), jwks: jwks(), now }),
+    ).rejects.toMatchObject({ code: 'malformed' });
   });
 
   it('bad signature → invalid_signature', async () => {
-    const signer = await makeTestKey();
-    const other = await makeTestKey();
-    const signatureHeader = await signPayload(signer, sampleEvent);
-
+    const body = envelopeJson();
+    const { privateKey: otherKey } = await generateKeyPair('EdDSA', {
+      crv: 'Ed25519',
+      extractable: true,
+    });
+    const forged = await new CompactSign(encoder.encode(body))
+      .setProtectedHeader({ alg: 'EdDSA', kid, typ: 'application/vc+jws' })
+      .sign(otherKey as CryptoKey);
     await expect(
-      verifyWebhook({
-        payload: JSON.stringify(sampleEvent),
-        signatureHeader,
-        jwks: jwksOf(other),
-      }),
-    ).rejects.toMatchObject({ code: 'unknown_kid' });
+      verifyWebhook({ payload: body, signatureHeader: forged, jwks: jwks(), now }),
+    ).rejects.toMatchObject({ code: 'invalid_signature' });
   });
 
   it('algorithm confusion in webhook → invalid_signature', async () => {
-    const key = await makeTestKey();
-    const forged = forgeToken('HS256', key.kid, sampleEvent);
-
+    const body = envelopeJson();
+    const header = Buffer.from(JSON.stringify({ alg: 'HS256', kid })).toString('base64url');
+    const payload = Buffer.from(body).toString('base64url');
+    const forged = `${header}.${payload}.AAAA`;
     await expect(
-      verifyWebhook({
-        payload: JSON.stringify(sampleEvent),
-        signatureHeader: forged,
-        jwks: jwksOf(key),
-      }),
+      verifyWebhook({ payload: body, signatureHeader: forged, jwks: jwks(), now }),
     ).rejects.toMatchObject({ code: 'invalid_signature' });
   });
 
   it('error message never contains the signature header', async () => {
-    const signer = await makeTestKey();
-    const other = await makeTestKey();
-    const signatureHeader = await signPayload(signer, sampleEvent);
-
-    let caught: unknown;
+    const body = envelopeJson();
+    const jwsHeader = await sign(envelopeJson({ data: { other: true } }));
     try {
-      await verifyWebhook({
-        payload: JSON.stringify(sampleEvent),
-        signatureHeader,
-        jwks: jwksOf(other),
-      });
-    } catch (e) {
-      caught = e;
+      await verifyWebhook({ payload: body, signatureHeader: jwsHeader, jwks: jwks(), now });
+      expect.unreachable('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(FidacyVerificationError);
+      expect((err as Error).message).not.toContain(jwsHeader);
+      expect((err as Error).message.length).toBeLessThan(200);
     }
-    expect((caught as Error).message).not.toContain(signatureHeader);
   });
 });

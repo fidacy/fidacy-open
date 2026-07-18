@@ -280,7 +280,14 @@ describe('Fidacy.billing', () => {
 describe('Fidacy.webhooks', () => {
   it('constructEvent delegates to verifyWebhook and returns the event', async () => {
     const key = await makeTestKey();
-    const event = { type: 'assessment.created', id: 'evt_1', data: { assessmentId: 'a1' } };
+    // verify@0.2.0 requires `created` (numeric epoch seconds, freshness window) —
+    // a real engine event always carries it; the fixture must too.
+    const event = {
+      type: 'assessment.created',
+      id: 'evt_1',
+      created: Math.floor(Date.now() / 1000),
+      data: { assessmentId: 'a1' },
+    };
     const sig = await signEvent(key, event);
 
     // The SDK derives jwksUrl from baseUrl; inject a JWKS fetch matching that host.

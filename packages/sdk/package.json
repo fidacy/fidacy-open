@@ -1,6 +1,6 @@
 {
   "name": "@fidacy/sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Thin, typed client for the public Fidacy API. Bundles @fidacy/verify so you can check every signed verdict yourself.",
   "license": "Apache-2.0",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@fidacy/agent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A universal Fidacy trust guard for any AI agent runtime. Wraps an agent ACTION with a cryptographically signed, independently verifiable Fidacy verdict. Ships thin adapters for OpenClaw and Hermes Agent.",
   "license": "Apache-2.0",
   "type": "module",

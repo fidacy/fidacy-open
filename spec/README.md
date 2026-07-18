@@ -15,6 +15,7 @@ required.
 | **A2A Task.metadata block**, how the verdict rides plain A2A (`{ fidacy_assessment: … }`) | [a2a-metadata.md](./a2a-metadata.md) | [a2a-metadata.schema.json](./a2a-metadata.schema.json) |
 | **A2A Trust-Verdict Extension v1**, the declarable A2A extension that names the above and pins where the verdict rides | [a2a-trust-verdict-extension.md](./a2a-trust-verdict-extension.md) | [a2a-trust-verdict-extension.schema.json](./a2a-trust-verdict-extension.schema.json) |
 | **UCP Trust-Verdict Binding v1**, how the verdict rides UCP as a `com.fidacy.trust_verdict` signal | [ucp-trust-verdict-binding.md](./ucp-trust-verdict-binding.md) | [ucp-trust-verdict-signal.schema.json](./ucp-trust-verdict-signal.schema.json) |
+| **AP2 Trust-Verdict Binding v1**, the neutral reference for AP2's open `risk_data` extension point | [ap2-trust-verdict-binding.md](./ap2-trust-verdict-binding.md) | [risk-data.schema.json](./risk-data.schema.json) |
 | **KYA**, Know-Your-Agent identity inputs | [kya.md](./kya.md) | [kya.schema.json](./kya.schema.json) |
 
 Versioning policy: [VERSIONING.md](./VERSIONING.md).
@@ -38,6 +39,16 @@ mechanism UCP defines for independently verifiable third-party attestations. The
 authoritative. Fidacy does not publish a `/.well-known/ucp` profile (that is for businesses and
 platforms); key discovery is the `provider_jwks` inline in the signal. See
 [ucp-trust-verdict-binding.md](./ucp-trust-verdict-binding.md).
+
+## AP2 Trust-Verdict Binding
+
+**Binding URI:** `https://fidacy.com/ap2/extensions/trust-verdict/v1`
+
+How the verdict rides [AP2](https://ap2-protocol.org): as a neutral risk signal inside the mandate's
+`risk_data` field, the extension point AP2 deliberately left open for the ecosystem to fill. AP2
+mandates prove authorization (signed by the user or agent, a party); the Fidacy verdict in
+`risk_data` adds the neutral, independently verifiable risk judgment. AP2 moved to the FIDO Alliance
+for governance in 2026. See [ap2-trust-verdict-binding.md](./ap2-trust-verdict-binding.md).
 
 ## Examples
 

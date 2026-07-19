@@ -27,14 +27,18 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Build FIRST (pnpm -r is topological): sdk's typecheck resolves
+      # @fidacy/verify to its built dist types, which don't exist on a clean
+      # runner until verify builds. Typecheck-before-build only ever passed on
+      # machines with stale dists.
+      - name: Build
+        run: pnpm -r build
+
       - name: Typecheck
         run: pnpm -r typecheck
 
       - name: Test
         run: pnpm -r test
-
-      - name: Build
-        run: pnpm -r build
 
   # ---------------------------------------------------------------------------
   # DO NOT ENABLE without sign-off.

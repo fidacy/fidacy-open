@@ -16,6 +16,7 @@ required.
 | **A2A Trust-Verdict Extension v1**, the declarable A2A extension that names the above and pins where the verdict rides | [a2a-trust-verdict-extension.md](./a2a-trust-verdict-extension.md) | [a2a-trust-verdict-extension.schema.json](./a2a-trust-verdict-extension.schema.json) |
 | **UCP Trust-Verdict Binding v1**, how the verdict rides UCP as a `com.fidacy.trust_verdict` signal | [ucp-trust-verdict-binding.md](./ucp-trust-verdict-binding.md) | [ucp-trust-verdict-signal.schema.json](./ucp-trust-verdict-signal.schema.json) |
 | **AP2 Trust-Verdict Binding v1**, the neutral reference for AP2's open `risk_data` extension point | [ap2-trust-verdict-binding.md](./ap2-trust-verdict-binding.md) | [risk-data.schema.json](./risk-data.schema.json) |
+| **Decision-Provenance Claim Type v1 (draft)**, proof a decision existed as-is at a moment, Bitcoin-anchored (`com.fidacy.decision_provenance`) | [decision-provenance-claim.md](./decision-provenance-claim.md) | [decision-provenance-receipt.schema.json](./decision-provenance-receipt.schema.json) |
 | **KYA**, Know-Your-Agent identity inputs | [kya.md](./kya.md) | [kya.schema.json](./kya.schema.json) |
 
 Versioning policy: [VERSIONING.md](./VERSIONING.md).
@@ -49,6 +50,20 @@ How the verdict rides [AP2](https://ap2-protocol.org): as a neutral risk signal 
 mandates prove authorization (signed by the user or agent, a party); the Fidacy verdict in
 `risk_data` adds the neutral, independently verifiable risk judgment. AP2 moved to the FIDO Alliance
 for governance in 2026. See [ap2-trust-verdict-binding.md](./ap2-trust-verdict-binding.md).
+
+## Decision-Provenance Claim Type (draft)
+
+**Signal:** `com.fidacy.decision_provenance`
+
+The fourth claim type of the external-verifier envelope
+([UCP #534](https://github.com/Universal-Commerce-Protocol/ucp/discussions/534) /
+[#535](https://github.com/Universal-Commerce-Protocol/ucp/discussions/535)): proof that a specific
+decision existed, with exactly that content, at that moment, and was not rewritten afterwards. A
+signed receipt (EdDSA JWS, verifiable with any JOSE library) plus a hash-chained audit checkpointed
+into Bitcoin transactions, so existence-in-time holds without trusting the issuer. Normative issuer
+requirements: non-party to the transaction, long-horizon evidence, issuer-independent anchoring.
+See [decision-provenance-claim.md](./decision-provenance-claim.md) and the
+[live example](./examples/decision-provenance-receipt.json).
 
 ## Examples
 

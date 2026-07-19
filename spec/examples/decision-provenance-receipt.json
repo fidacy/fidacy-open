@@ -1,0 +1,10 @@
+{
+  "_comment": "A REAL decision-provenance receipt signed by the live Fidacy engine for examples/decision-record.json (audit seq 158). Verify: (1) the JWS against https://api.fidacy.com/.well-known/jwks.json with typ fidacy-artifact-receipt+jws pinned; (2) sha256 of decision-record.json against the receipt's sha256 claim; (3) audit.seq against the Bitcoin-anchored checkpoint chain (https://fidacy-core.vercel.app/v1/anchor/latest, trail at fidacy.com/proof).",
+  "receipt": "eyJhbGciOiJFZERTQSIsImtpZCI6IjF6b001N2JyamxsdWZOVHpDd0k1LWo1akZraUFzbHl6VkRiUEFjUl9mLU0iLCJ0eXAiOiJmaWRhY3ktYXJ0aWZhY3QtcmVjZWlwdCtqd3MifQ.eyJhcnRpZmFjdElkIjoiZmVlZjc4NGItNThlOC00NTAwLWEzOWQtNGM4Y2JlODg1MTNkIiwiYXVkaXQiOnsiaGFzaCI6IjlhNWZhOWY0MmMwMWQ2YmUzZTJhNmE3YjU3Mzk5ZDUyYmJlYTdjNzFmY2U3MWJlZTk2NzRhODMwZDg4NmJjNGUiLCJzZXEiOjE1OH0sImRpZ2VzdCI6IjUzYTUwMjdkNzdiMDZhNDQ4YTA5ZGEzMzlkOTA5MzQ3MDYwN2JjNTIzYzNhNWM0ZWY4NTY4OTE4ZjE4MDYwMTQiLCJraW5kIjoiY3VzdG9tIiwib3JnIjoiNjFlOGEzZWQtNDIyNi00ZWYzLWJiYzUtNDJmYzkzOTE2NGQ1Iiwic2hhMjU2IjoiMTYxM2VhNGMxNzA0NTNhZWI4ZTU0NDM3OGUyNWM4ODJlNzRjODU0NzI4YTBlY2M5Mjg2YTM1NDMwN2I4MThjYSIsInN1YmplY3QiOiJhZ2VudDpkZW1vLW5vcnRod2luZCIsInRzIjoiMjAyNi0wNy0xOVQwMDoyNzoxOS4xMjBaIiwidiI6ImZpZGFjeS5hcnRpZmFjdC52MSJ9.DwAxv-YPwc-49jbXCAZdQ72ptFmx-sn4-dLpScTBVyAMgts_Q3u7Dx7wPjVNwqtD2yZK9tINdZoxXwMGsbVBBA",
+  "protected_header": {
+    "alg": "EdDSA",
+    "kid": "1zoM57brjllufNTzCwI5-j5jFkiAslyzVDbPAcR_f-M",
+    "typ": "fidacy-artifact-receipt+jws"
+  },
+  "anchor_at_issuance": { "status": "queued", "note": "confirms with the next Bitcoin checkpoint; only the signature leg holds until then" }
+}

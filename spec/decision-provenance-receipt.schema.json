@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fidacy.com/schemas/decision-provenance-receipt.schema.json",
+  "title": "Fidacy decision-provenance receipt claims (fidacy.artifact.v1)",
+  "description": "Payload claims of the compact JWS (typ fidacy-artifact-receipt+jws, alg EdDSA) that attests a decision record existed with exactly these bytes at this moment. The JWS is the source of truth; verify against the issuer JWKS by the protected-header kid.",
+  "type": "object",
+  "required": ["v", "artifactId", "sha256", "subject", "kind", "ts", "audit", "digest", "org"],
+  "additionalProperties": false,
+  "properties": {
+    "v": { "const": "fidacy.artifact.v1" },
+    "artifactId": { "type": "string", "format": "uuid" },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the decision-record bytes. The record itself is never uploaded."
+    },
+    "subject": { "type": "string", "maxLength": 120 },
+    "kind": {
+      "type": "string",
+      "enum": ["contract", "invoice", "prescription", "claim", "document", "image", "audio", "video", "conversation", "custom"]
+    },
+    "ts": { "type": "string", "format": "date-time" },
+    "audit": {
+      "type": "object",
+      "required": ["seq", "hash"],
+      "additionalProperties": false,
+      "properties": {
+        "seq": { "type": "integer", "minimum": 1, "description": "Position in the issuer's hash-chained audit; resolves to a Bitcoin-anchored Merkle checkpoint." },
+        "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The chain entry's hash (commits to every prior entry)." }
+      }
+    },
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The audit-leaf digest the chain entry commits to." },
+    "org": { "type": "string", "description": "Issuing account scope." }
+  }
+}

@@ -6,5 +6,17 @@
     "kid": "1zoM57brjllufNTzCwI5-j5jFkiAslyzVDbPAcR_f-M",
     "typ": "fidacy-artifact-receipt+jws"
   },
-  "anchor_at_issuance": { "status": "queued", "note": "confirms with the next Bitcoin checkpoint; only the signature leg holds until then" }
+  "anchor_at_issuance": {
+    "status": "queued",
+    "note": "only the signature leg holds until the covering checkpoint"
+  },
+  "anchor_checkpoint": {
+    "id": 29,
+    "merkleRoot": "ea462153fa54ac901329d4e8c3d61aabe9e3158deda4ffa4a27d148d91bae64a",
+    "seqStart": 158,
+    "seqEnd": 158,
+    "capturedAt": "2026-07-19T00:30:40.413+00:00",
+    "status_when_committed": "pending",
+    "note": "txid lands with Bitcoin confirmation; check /v1/anchor/latest"
+  }
 }

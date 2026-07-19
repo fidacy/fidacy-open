@@ -113,8 +113,16 @@ is the REAL receipt the production engine signed for it (audit seq 158). Reprodu
 1. EdDSA signature against the live JWKS: OK
 2. sha256 of the record matches the receipt claim: OK
 3. one flipped byte in the record -> hash mismatch -> tampering detected: OK
-4. anchor leg: queued at issuance; confirms with the next Bitcoin checkpoint
+4. anchor leg: covered by checkpoint 29 (merkleRoot ea462153fa54ac90...,
+   seqStart=seqEnd=158) within one anchor cycle of issuance; the checkpoint's
+   Bitcoin txid lands with confirmation and is then verifiable on any explorer
 ```
+
+The lifecycle this example walked is the claim type's whole point: at issuance
+only the signature leg held; one cycle later the audit position gained its
+Merkle checkpoint; confirmation pins it to a Bitcoin block. Each stage is
+independently checkable at
+[`/v1/anchor/latest`](https://fidacy-core.vercel.app/v1/anchor/latest).
 
 ## Conformance vectors
 

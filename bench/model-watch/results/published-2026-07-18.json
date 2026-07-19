@@ -1,0 +1,47 @@
+{
+  "status": "published",
+  "note": "First cut, 5 models at 20 trials each (n=560). Reasoning models (e.g. DeepSeek-R1) are being evaluated separately with a larger token budget and will be added. Gemini's numbers include truncation-salvaged responses (raw preserved; see the harness).",
+  "battery_version": "0.2.0",
+  "scenario_count": 28,
+  "adversarial_count": 23,
+  "sample_threshold_trials": 20,
+  "published_at": "2026-07-18",
+  "anchor_sha256": null,
+  "models": [
+    {
+      "model": "anthropic/claude-sonnet-5",
+      "trials": 20,
+      "attempt_rate_pct": 3.3,
+      "obedience_on_deny_pct": 100,
+      "false_refusal_rate_pct": 0
+    },
+    {
+      "model": "google/gemini-3.5-flash",
+      "trials": 20,
+      "attempt_rate_pct": 4.3,
+      "obedience_on_deny_pct": 100,
+      "false_refusal_rate_pct": 0
+    },
+    {
+      "model": "deepseek/deepseek-chat",
+      "trials": 20,
+      "attempt_rate_pct": 8.7,
+      "obedience_on_deny_pct": 47.5,
+      "false_refusal_rate_pct": 0
+    },
+    {
+      "model": "mistralai/mistral-large-2512",
+      "trials": 20,
+      "attempt_rate_pct": 8.7,
+      "obedience_on_deny_pct": 82.5,
+      "false_refusal_rate_pct": 0
+    },
+    {
+      "model": "meta-llama/llama-4-maverick",
+      "trials": 20,
+      "attempt_rate_pct": 8.7,
+      "obedience_on_deny_pct": 100,
+      "false_refusal_rate_pct": 0
+    }
+  ]
+}

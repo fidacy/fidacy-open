@@ -1,0 +1,11 @@
+{
+  "name": "model-watch-harness",
+  "private": true,
+  "type": "module",
+  "description": "Model Watch: adversarial payment-mandate benchmark for AI models. Same mandate, same attacks, same deterministic judge; the model is the only variable.",
+  "scripts": {
+    "validate": "node validate.mjs",
+    "run": "node run.mjs"
+  },
+  "dependencies": { "@fidacy/mcp": "^0.2.2" }
+}

@@ -4,32 +4,98 @@
   "title": "Fidacy decision-provenance receipt claims (fidacy.artifact.v1)",
   "description": "Payload claims of the compact JWS (typ fidacy-artifact-receipt+jws, alg EdDSA) that attests a decision record existed with exactly these bytes at this moment. The JWS is the source of truth; verify against the issuer JWKS by the protected-header kid.",
   "type": "object",
-  "required": ["v", "artifactId", "sha256", "subject", "kind", "ts", "audit", "digest", "org"],
+  "required": [
+    "v",
+    "artifactId",
+    "sha256",
+    "subject",
+    "kind",
+    "ts",
+    "audit",
+    "digest",
+    "org"
+  ],
   "additionalProperties": false,
   "properties": {
-    "v": { "const": "fidacy.artifact.v1" },
-    "artifactId": { "type": "string", "format": "uuid" },
+    "v": {
+      "const": "fidacy.artifact.v1"
+    },
+    "artifactId": {
+      "type": "string",
+      "format": "uuid"
+    },
     "sha256": {
       "type": "string",
       "pattern": "^[0-9a-f]{64}$",
       "description": "SHA-256 of the decision-record bytes. The record itself is never uploaded."
     },
-    "subject": { "type": "string", "maxLength": 120 },
+    "subject": {
+      "type": "string",
+      "maxLength": 120
+    },
     "kind": {
       "type": "string",
-      "enum": ["contract", "invoice", "prescription", "claim", "document", "image", "audio", "video", "conversation", "custom"]
+      "enum": [
+        "contract",
+        "invoice",
+        "prescription",
+        "claim",
+        "document",
+        "image",
+        "audio",
+        "video",
+        "conversation",
+        "custom"
+      ]
     },
-    "ts": { "type": "string", "format": "date-time" },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
     "audit": {
       "type": "object",
-      "required": ["seq", "hash"],
+      "required": [
+        "seq",
+        "hash"
+      ],
       "additionalProperties": false,
       "properties": {
-        "seq": { "type": "integer", "minimum": 1, "description": "Position in the issuer's hash-chained audit; resolves to a Bitcoin-anchored Merkle checkpoint." },
-        "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The chain entry's hash (commits to every prior entry)." }
+        "seq": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Position in the issuer's hash-chained audit; resolves to a Bitcoin-anchored Merkle checkpoint."
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The chain entry's hash (commits to every prior entry)."
+        }
       }
     },
-    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The audit-leaf digest the chain entry commits to." },
-    "org": { "type": "string", "description": "Issuing account scope." }
-  }
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The audit-leaf digest the chain entry commits to."
+    },
+    "org": {
+      "type": "string",
+      "description": "Issuing account scope."
+    }
+  },
+  "examples": [
+    {
+      "v": "fidacy.artifact.v1",
+      "artifactId": "feef784b-58e8-4500-a39d-4c8cbe88513d",
+      "sha256": "1613ea4c170453aeb8e544378e25c882e74c854728a0ecc9286a354307b818ca",
+      "subject": "agent:demo-northwind",
+      "kind": "custom",
+      "ts": "2026-07-19T00:27:19.120Z",
+      "audit": {
+        "seq": 158,
+        "hash": "9a5fa9f42c01d6be3e2a6a7b57399d52bbea7c71fce71bee9674a830d886bc4e"
+      },
+      "digest": "53a5027d77b06a448a09da339d9093470607bc523c3a5c4ef8568918f1806014",
+      "org": "61e8a3ed-4226-4ef3-bbc5-42fc939164d5"
+    }
+  ]
 }

@@ -70,3 +70,5 @@ See [decision-provenance-claim.md](./decision-provenance-claim.md) and the
 - [examples/a2a-agent-card-with-extension.json](./examples/a2a-agent-card-with-extension.json), an Agent Card declaring the extension.
 - [examples/a2a-cart-mandate-with-risk_data.json](./examples/a2a-cart-mandate-with-risk_data.json), an AP2 CartMandate carrying the verdict in `risk_data`.
 - [examples/ucp-checkout-with-trust-verdict.json](./examples/ucp-checkout-with-trust-verdict.json), a UCP checkout carrying the verdict in `signals`.
+- [examples/decision-record.json](./examples/decision-record.json), a decision record (its content is a real signed risk verdict).
+- [examples/decision-provenance-receipt.json](./examples/decision-provenance-receipt.json), the REAL receipt the production engine signed for it (audit seq 158, checkpoint 29).

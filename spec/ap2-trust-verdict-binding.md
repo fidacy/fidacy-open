@@ -84,4 +84,4 @@ nothing to and changes nothing in the AP2 mandate schema, and it is fully opt-in
 - Container: [risk-data.md](./risk-data.md) · Claims: [risk-payload.md](./risk-payload.md)
 - Verifier: [`@fidacy/verify`](https://www.npmjs.com/package/@fidacy/verify)
 - Public JWKS: https://api.fidacy.com/.well-known/jwks.json
-- Sibling bindings: [UCP](./ucp-trust-verdict-binding.md) · [A2A](./a2a-trust-verdict-extension.md)
+- Sibling bindings: [UCP](./ucp-trust-verdict-binding.md) · [A2A](./a2a-trust-verdict-extension.md) · sibling claim type: [Decision-Provenance](./decision-provenance-claim.md)

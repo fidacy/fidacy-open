@@ -81,3 +81,10 @@ presence. See [`VERSIONING.md`](./VERSIONING.md).
 
 This object is what gets signed into the compact JWS. After verification, `@fidacy/verify`
 returns exactly these claims.
+
+## See also
+
+The risk verdict answers "should this transaction happen" at decision time. Its sibling,
+the [Decision-Provenance Claim Type](./decision-provenance-claim.md), answers the
+after-the-fact question ("prove this decision existed exactly like this"), with the same
+issuer keys and a Bitcoin-anchored audit position.

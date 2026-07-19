@@ -89,3 +89,8 @@ This binding documents behavior the Fidacy engine already ships: the UCP adapter
 the `com.fidacy.trust_verdict` signal today, and the JWS is verifiable against the public JWKS with the
 open-source verifier. The signal conforms to UCP's own signals schema. Examples here are illustrative;
 their JWS strings are samples, not live signatures.
+
+## Sibling claim types and bindings
+
+- [AP2 binding](./ap2-trust-verdict-binding.md) · [A2A extension](./a2a-trust-verdict-extension.md), the same risk verdict riding other protocols.
+- [Decision-Provenance Claim Type](./decision-provenance-claim.md) (`com.fidacy.decision_provenance`), the sibling signal answering the after-the-fact question: proof a decision existed as-is at a moment, Bitcoin-anchored.

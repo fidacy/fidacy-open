@@ -9,7 +9,7 @@
     "guard": "node guard.mjs"
   },
   "dependencies": {
-    "@fidacy/agent": "workspace:*",
-    "@fidacy/sdk": "workspace:*"
+    "@fidacy/agent": "^0.1.1",
+    "@fidacy/sdk": "^0.1.3"
   }
 }

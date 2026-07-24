@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fidacy/verify": "workspace:*"
+    "@fidacy/verify": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

@@ -14,7 +14,8 @@ and was not tampered with — entirely client-side, with no need to call back to
 "Anyone can verify" is a testable claim here, not a slogan: a
 [conformance corpus](./packages/verify/conformance) ships signed fixtures plus
 expected outcomes, so a port of the verifier in any language proves
-compatibility offline (`node conformance/run.mjs`, 8/8 or it is not compatible).
+compatibility offline (`node packages/verify/conformance/run.mjs` from the repo
+root, 8/8 or it is not compatible).
 
 ## Packages
 

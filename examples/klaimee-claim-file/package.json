@@ -1,0 +1,7 @@
+{
+  "name": "fidacy-klaimee-claim-file",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node demo.mjs" },
+  "dependencies": { "@fidacy/mcp": "^0.2.9" }
+}

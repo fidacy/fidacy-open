@@ -1,0 +1,90 @@
+name: Examples install standalone
+
+# The guard for the bug class that shipped: a public example that does not
+# install or run for someone who is NOT inside this monorepo. The repo's normal
+# CI installs the whole pnpm workspace, so a `workspace:*` dependency or a
+# monorepo-relative path passes there and still breaks a partner who clones a
+# single example and runs `npm i`. This job reproduces the partner path exactly:
+# it copies each example OUT of the workspace and installs it in isolation.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  standalone:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Every example installs and runs outside the workspace
+        run: |
+          set -uo pipefail
+          fail=0
+          for d in examples/*/ quickstart/ quickstart-python/; do
+            [ -f "${d}package.json" ] || [ -f "${d}requirements.txt" ] || continue
+            name=$(basename "$d")
+            tmp=$(mktemp -d)
+            cp -R "${d}." "$tmp/"
+            rm -rf "$tmp/node_modules" "$tmp/package-lock.json" "$tmp/.venv"
+
+            # ---- Node examples: npm i must succeed standalone ----
+            if [ -f "$tmp/package.json" ]; then
+              echo "::group::$name — npm i (standalone)"
+              if ! ( cd "$tmp" && npm i --no-fund --no-audit ); then
+                echo "::error title=$name::npm i FAILED standalone (workspace:* or monorepo-only dep?)"
+                fail=1; echo "::endgroup::"; rm -rf "$tmp"; continue
+              fi
+              echo "::endgroup::"
+
+              # If there is a runnable script, it must NOT crash on a missing
+              # file/module. A graceful 'set your key' exit is fine and expected.
+              script=$(node -e "const s=(require('$tmp/package.json').scripts)||{};process.stdout.write(s.start?'start':s.guard?'guard':s.pay?'pay':'')")
+              if [ -n "$script" ]; then
+                echo "::group::$name — npm run $script"
+                out=$( cd "$tmp" && timeout 45 npm run "$script" 2>&1 || true )
+                echo "$out"
+                crashes=$(printf '%s' "$out" | grep -ciE "Cannot find module|MODULE_NOT_FOUND|ERR_MODULE_NOT_FOUND|SyntaxError|is not defined|is not a function" || true)
+                if [ "$crashes" -ne 0 ]; then
+                  echo "::error title=$name::crashed on run (module/syntax error, $crashes match(es))"
+                  fail=1
+                fi
+                echo "::endgroup::"
+              fi
+            fi
+
+            # ---- Python quickstart: deps install + import must not traceback ----
+            if [ -f "$tmp/requirements.txt" ]; then
+              echo "::group::$name — pip install + import (standalone)"
+              python3 -m venv "$tmp/.venv"
+              # shellcheck disable=SC1091
+              . "$tmp/.venv/bin/activate"
+              if ! pip install -q -r "$tmp/requirements.txt"; then
+                echo "::error title=$name::pip install FAILED"; fail=1
+              else
+                entry=$(ls "$tmp"/*.py 2>/dev/null | head -1)
+                if [ -n "$entry" ]; then
+                  out=$( python3 "$entry" 2>&1 || true )
+                  echo "$out"
+                  tb=$(printf '%s' "$out" | grep -ciE "Traceback|ModuleNotFoundError|ImportError|SyntaxError" || true)
+                  [ "$tb" -ne 0 ] && { echo "::error title=$name::python crashed ($tb)"; fail=1; }
+                fi
+              fi
+              deactivate || true
+              echo "::endgroup::"
+            fi
+
+            rm -rf "$tmp"
+          done
+
+          if [ "$fail" -ne 0 ]; then
+            echo "One or more public examples do not install/run standalone. A partner who clones them hits this."
+            exit 1
+          fi
+          echo "All public examples install and run standalone."
